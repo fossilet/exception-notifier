@@ -23,6 +23,7 @@ import socket
 import traceback
 import cgitb
 import sys
+import os.path
 
 
 def send_email(sender, receivers, subject, body, mail_server):
@@ -69,7 +70,8 @@ def mail_exception(sender, receivers, mail_server='localhost'):
                 func(*args, **kwargs)
             except Exception as e:
                 hostname = socket.gethostname()
-                subject = '%s:%s: %s' % (hostname, __file__, e)
+                subject = '%s: %s: %s' % (hostname,
+                        os.path.basename(__file__), e)
                 traceback.print_exc()
 
                 # Write cgitb output to a variable
