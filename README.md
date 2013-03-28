@@ -4,6 +4,18 @@ Notify uncaught exceptions in your Python code.
 
 Working with Python 2.7.
 
+## Installation
+
+Exception Notifier is available at
+[PYPI](https://pypi.python.org/pypi/exception-notifier),
+you can install it using `pip`:
+
+    pip install exception-notifier
+
+Or you can clone the repo and run:
+
+    python setup.py install
+
 ## Usage
 
 Use the `mail_exception` function to return an decorator for your function.
