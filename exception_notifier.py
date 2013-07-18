@@ -55,8 +55,11 @@ def mail_exception(sender, receivers, mail_server='localhost'):
                 func(*args, **kwargs)
             except Exception as e:
                 hostname = socket.gethostname()
+                # RFC 2822's hard limit is 998 characters per line. So, minus
+                # "Subject: " the actual subject must be no longer than 989
+                # characters. (Copied from Django source).
                 subject = '%s: %s: %s' % (hostname,
-                        os.path.basename(__file__), e)
+                        os.path.basename(__file__), e)[:989]
                 traceback.print_exc()
 
                 # Write cgitb output to a variable
