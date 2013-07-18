@@ -52,7 +52,7 @@ def mail_exception(sender, receivers, mail_server='localhost'):
     def decorator(func):
         def wrapper(*args, **kwargs):
             try:
-                func(*args, **kwargs)
+                return func(*args, **kwargs)
             except Exception as e:
                 hostname = socket.gethostname()
                 # RFC 2822's hard limit is 998 characters per line. So, minus
