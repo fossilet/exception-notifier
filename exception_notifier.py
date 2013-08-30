@@ -1,5 +1,5 @@
-'''Mail uncaught exceptions to developers.
-'''
+"""Mail uncaught exceptions to developers.
+"""
 
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -12,7 +12,7 @@ import os.path
 
 
 def send_email(sender, receivers, subject, body, mail_server):
-    '''Send email to addresses.
+    """Send email to addresses.
     Note: authentication to SMTP server is currently not support yet.
 
     sender: sender's email address
@@ -21,7 +21,7 @@ def send_email(sender, receivers, subject, body, mail_server):
     mail_server: host of SMTP server
 
     This function should be robust.
-    '''
+    """
     msg = MIMEMultipart('alternative')
     msg['subject'] = str(subject).decode('utf-8')
     msg['From'] = sender
@@ -44,7 +44,7 @@ class WriteableObject(file):
 
 def mail_exception(sender, receivers, mail_server='localhost', callback=None,
                    args=(), kwargs=None, both=False):
-    '''Notify user when an exception is raised in the wrapped function.
+    """Notify user when an exception is raised in the wrapped function.
 
     sender: sender's email address
     receivers: list of receivers email addresses
@@ -56,7 +56,7 @@ def mail_exception(sender, receivers, mail_server='localhost', callback=None,
     Defaults to {}.
     both: if True, both the mail routine and callback function will be called.
     Defaults to False.
-    '''
+    """
     if not kwargs:
         kwargs = {}
 

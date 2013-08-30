@@ -34,8 +34,8 @@ Then every uncaught exception in your function will be mailed to you.
             ...
 
 You may better wrap your whole module in a starting script. Thus not only
-functions, but every line in your moudle will be protected by
-excetpion-notifier. Your module `fancy_module` may look like this:
+functions, but every line in your module will be protected by
+exception-notifier. Your module `fancy_module` may look like this:
 
         def func1():
             ...
