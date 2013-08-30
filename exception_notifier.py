@@ -42,17 +42,28 @@ class WriteableObject(file):
         self.content += string
 
 
-def mail_exception(sender, receivers, mail_server='localhost'):
+def mail_exception(sender, receivers, mail_server='localhost', callback=None,
+                   args=(), kwargs=None, both=False):
     '''Notify user when an exception is raised in the wrapped function.
 
     sender: sender's email address
     receivers: list of receivers email addresses
-    mail_server: host of SMTP server
+    mail_server: host of SMTP server. Defaults to 'localhost'.
+    callback: callback function when an exception is encountered. Defaults to
+    None, then the exception information is mailed.
+    args: argument tuple for the callback function invocation. Defaults to ().
+    kwargs: keyword arguments dictionary for the callback function invocation.
+    Defaults to {}.
+    both: if True, both the mail routine and callback function will be called.
+    Defaults to False.
     '''
+    if not kwargs:
+        kwargs = {}
+
     def decorator(func):
-        def wrapper(*args, **kwargs):
+        def wrapper(*fargs, **fkwargs):
             try:
-                return func(*args, **kwargs)
+                return func(*fargs, **fkwargs)
             except Exception as e:
                 hostname = socket.gethostname()
                 # RFC 2822's hard limit is 998 characters per line. So, minus
@@ -70,6 +81,12 @@ def mail_exception(sender, receivers, mail_server='localhost'):
                 sys.stderr = sys_stderr_orig
                 body = bodyf.content
 
-                send_email(sender, receivers, subject, body, mail_server)
+                if callback is None:
+                    send_email(sender, receivers, subject, body, mail_server)
+                elif both:
+                    callback(*args, **kwargs)
+                    send_email(sender, receivers, subject, body, mail_server)
+                else:
+                    callback(*args, **kwargs)
         return wrapper
     return decorator

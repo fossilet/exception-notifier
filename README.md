@@ -66,3 +66,12 @@ Your wrapper scripts may look like this:
 
 This way you will be notified if any line in your module raises an uncaught
 exception.
+
+If you want to use custom callback function instead of the default behavior
+of sending email, you can use the callback argument like below:
+
+    @mail_exception(callback=f, args=(1, 2),
+            kwargs={'x': 3}, **exception_notifier_conf)
+
+If the argument `both` is True, then not only the mail is sent, but the
+callback function is executed also.
