@@ -84,9 +84,9 @@ def mail_exception(sender=log_name, receivers=None, mail_server='localhost',
                 if callback is None:
                     send_email(sender, receivers, subject, body, mail_server)
                 elif both:
-                    callback(*args, **kwargs)
                     send_email(sender, receivers, subject, body, mail_server)
+                    return callback(*args, **kwargs)
                 else:
-                    callback(*args, **kwargs)
+                    return callback(*args, **kwargs)
         return wrapper
     return decorator
