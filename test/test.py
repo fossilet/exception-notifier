@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 """Test script.
 
 
@@ -10,6 +12,7 @@ value: integer division or modulo by zero
 """
 
 import sys
+sys.path.insert(0, '..')
 
 import exception_notifier
 
