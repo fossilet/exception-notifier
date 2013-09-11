@@ -8,8 +8,11 @@ import socket
 import traceback
 import cgitb
 import sys
+import os
 import os.path
 import StringIO
+
+log_name = os.getenv('USERNAME' if sys.platform == 'win32' else 'USER')
 
 
 def send_email(sender, receivers, subject, body, mail_server):
@@ -35,12 +38,13 @@ def send_email(sender, receivers, subject, body, mail_server):
     s.quit()
 
 
-def mail_exception(sender, receivers, mail_server='localhost', callback=None,
-                   args=(), kwargs=None, both=False):
+def mail_exception(sender=log_name, receivers=None, mail_server='localhost',
+                   callback=None, args=(), kwargs=None, both=False):
     """Notify user when an exception is raised in the wrapped function.
 
-    sender: sender's email address
-    receivers: list of receivers email addresses
+    sender: sender's email address. Defaults to the name of the current user.
+    receivers: list of receivers' email addresses. Defaults to the name of the
+    current user.
     mail_server: host of SMTP server. Defaults to 'localhost'.
     callback: callback function when an exception is encountered. Defaults to
     None, then the exception information is mailed.
@@ -50,6 +54,8 @@ def mail_exception(sender, receivers, mail_server='localhost', callback=None,
     both: if True, both the mail routine and callback function will be called.
     Defaults to False.
     """
+    if not receivers:
+        receivers = [log_name]
     if not kwargs:
         kwargs = {}
 

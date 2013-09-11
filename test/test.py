@@ -1,13 +1,10 @@
 """Test script.
 """
 
-import os
 import sys
 import traceback
 
 import exception_notifier
-
-log_name = os.getlogin()
 
 
 def exc_handler():
@@ -19,8 +16,7 @@ def exc_handler():
     print '-----'
 
 
-@exception_notifier.mail_exception(sender=log_name, receivers=[log_name],
-                                   callback=exc_handler, both=True)
+@exception_notifier.mail_exception(callback=exc_handler, both=True)
 def f(x, y):
     return x / y
 
