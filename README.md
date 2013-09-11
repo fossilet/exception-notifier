@@ -1,4 +1,5 @@
-# exception-notifier
+# exception-notifier [![Build Status](https://travis-ci.org/fossilet/exception-notifier.png?branch=master)](https://travis-ci.org/fossilet/exception-notifier)
+
 
 Notify uncaught exceptions in your Python code.
 

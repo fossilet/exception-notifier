@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 """Test script.
 
 
@@ -11,6 +13,8 @@ value: integer division or modulo by zero
 
 import sys
 
+# Must run from the project root.
+sys.path.insert(0, '.')
 import exception_notifier
 
 
@@ -26,7 +30,9 @@ def exc_handler_ret():
     """An exception handler that returns something other than None."""
     return 'DIV_BY_ZERO'
 
-@exception_notifier.mail_exception(callback=exc_handler, both=True)
+# Email sending is not tested since it is impossible to send email on Travis
+# server.
+@exception_notifier.mail_exception(callback=exc_handler)
 def f(x, y):
     return x / y
 
@@ -43,4 +49,4 @@ if __name__ == '__main__':
     assert g(1, 0) == 'DIV_BY_ZERO'
 
     import doctest
-    doctest.testmod()
+    doctest.testmod(raise_on_error=True)
