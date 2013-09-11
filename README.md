@@ -67,6 +67,8 @@ Your wrapper scripts may look like this:
 This way you will be notified if any line in your module raises an uncaught
 exception.
 
+## Use custom callback
+
 If you want to use custom callback function instead of the default behavior
 of sending email, you can use the callback argument like below:
 
@@ -75,3 +77,6 @@ of sending email, you can use the callback argument like below:
 
 If the argument `both` is True, then not only the mail is sent, but the
 callback function is executed also.
+
+In the callback function, you probably want to deal with the exception
+information, then [sys.exc_info()](http://docs.python.org/2/library/sys.html#sys.exc_info) is conveniently at your service.
