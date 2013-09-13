@@ -48,4 +48,4 @@ if __name__ == '__main__':
     assert g(1, 0) == 'DIV_BY_ZERO'
 
     import doctest
-    doctest.testmod()
+    doctest.testmod(raise_on_error=True)
