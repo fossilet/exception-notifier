@@ -8,12 +8,14 @@ Test mail function and custom callback function.
 -----
 type: <type 'exceptions.ZeroDivisionError'>
 value: integer division or modulo by zero
+x
 -----
 """
 
 import sys
-sys.path.insert(0, '.')
 
+# Must run from the project root.
+sys.path.insert(0, '.')
 import exception_notifier
 
 
