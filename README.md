@@ -1,5 +1,4 @@
-# exception-notifier [![Build Status](https://travis-ci.org/fossilet/exception-notifier.png?branch=master)](https://travis-ci.org/fossilet/exception-notifier)
-
+# exception-notifier [![Build Status](https://travis-ci.org/fossilet/exception-notifier.png?branch=master)](https://travis-ci.org/fossilet/exception-notifier)  [![Coverage Status](https://coveralls.io/repos/fossilet/exception-notifier/badge.png?branch=fossilet%2Fcoveralls)](https://coveralls.io/r/fossilet/exception-notifier?branch=fossilet%2Fcoveralls)
 
 Notify uncaught exceptions in your Python code.
 
@@ -23,13 +22,13 @@ Use the `mail_exception` function to return an decorator for your function.
 Then every uncaught exception in your function will be mailed to you.
 
         from exception_notifier import mail_exception
-        
+
         exception_notifier_conf = {
             'sender': 'tux@localhost',
             'receivers': ['tux@localhost'],
             'mail_server': 'localhost',
         }
-        
+
         @mail_exception(**exception_notifier_conf)
         def fancy_function():
             ...
@@ -49,19 +48,19 @@ exception-notifier. Your module `fancy_module` may look like this:
 Your wrapper scripts may look like this:
 
         from exception_notifier import mail_exception
-        
+
         exception_notifier_conf = {
             'sender': 'tux@localhost',
             'receivers': ['tux@localhost'],
             'mail_server': 'localhost',
         }
-        
-        
+
+
         @mail_exception(**exception_notifier_conf)
         def main():
             import fancy_module
             fancy_module.main()
-        
+
         if __name__ == '__main__':
                 main()
 
