@@ -1,4 +1,4 @@
-# exception-notifier [![Build Status](https://travis-ci.org/fossilet/exception-notifier.png?branch=master)](https://travis-ci.org/fossilet/exception-notifier)  [![Coverage Status](https://coveralls.io/repos/fossilet/exception-notifier/badge.png?branch=fossilet%2Fcoveralls)](https://coveralls.io/r/fossilet/exception-notifier?branch=fossilet%2Fcoveralls)
+# exception-notifier [![Build Status](https://travis-ci.org/fossilet/exception-notifier.png?branch=master)](https://travis-ci.org/fossilet/exception-notifier)  [![Coverage Status](https://coveralls.io/repos/fossilet/exception-notifier/badge.png?branch=master)](https://coveralls.io/r/fossilet/exception-notifier?branch=master)
 
 Notify uncaught exceptions in your Python code.
 
