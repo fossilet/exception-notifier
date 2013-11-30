@@ -18,6 +18,23 @@ Or you can clone the repo and run:
 
 ## Usage
 
+### Override default exception hook
+
+The simplest usage:
+
+    import exception_notifier as en
+    en.enable()
+
+After this, all uncaught execptions will be mailed to your local account
+(provided you have a local mail server). `enable` can be customized with the
+same arguments with `mail_exception` as showed below.
+
+If you want to restore to the default hook, use:
+
+    en.disable()
+
+### Handling individual function
+
 Use the `mail_exception` function to return an decorator for your function.
 Then every uncaught exception in your function will be mailed to you.
 
@@ -67,7 +84,7 @@ Your wrapper scripts may look like this:
 This way you will be notified if any line in your module raises an uncaught
 exception.
 
-## Use custom callback
+### Use custom callback
 
 If you want to use custom callback function instead of the default behavior
 of sending email, you can use the callback argument like below:

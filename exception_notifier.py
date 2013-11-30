@@ -12,10 +12,10 @@ import os
 import os.path
 import StringIO
 
-log_name = os.getenv('USERNAME' if sys.platform == 'win32' else 'USER')
+_log_name = os.getenv('USERNAME' if sys.platform == 'win32' else 'USER')
 
 
-def send_email(sender, receivers, subject, body, mail_server):
+def _send_email(sender, receivers, subject, body, mail_server):
     """Send email to addresses.
     Note: authentication to SMTP server is currently not support yet.
 
@@ -35,12 +35,13 @@ def send_email(sender, receivers, subject, body, mail_server):
     s = smtplib.SMTP(mail_server)
     s.sendmail(msg['From'], receivers, msg.as_string())
     # Print to stderr to facilitate doctest.
-    print >>sys.stderr, "'%s' sent to %s" % (subject, ','.join(receivers))
+    print >> sys.stderr, "'%s' sent to %s" % (subject, ','.join(receivers))
     s.quit()
 
 
-def mail_exception(sender=log_name, receivers=None, mail_server='localhost',
-                   callback=None, args=(), kwargs=None, both=False):
+def mail_exception(sender=_log_name, receivers=[_log_name],
+                   mail_server='localhost', callback=None, args=(), kwargs={},
+                   both=False):
     """Notify user when an exception is raised in the wrapped function.
 
     sender: sender's email address. Defaults to the name of the current user.
@@ -55,39 +56,113 @@ def mail_exception(sender=log_name, receivers=None, mail_server='localhost',
     both: if True, both the mail routine and callback function will be called.
     Defaults to False.
     """
-    if not receivers:
-        receivers = [log_name]
-    if not kwargs:
-        kwargs = {}
-
     def decorator(func):
         def wrapper(*fargs, **fkwargs):
             try:
                 return func(*fargs, **fkwargs)
-            except Exception as e:
-                hostname = socket.gethostname()
-                # RFC 2822's hard limit is 998 characters per line. So, minus
-                # "Subject: " the actual subject must be no longer than 989
-                # characters. (Copied from Django source).
-                subject = ('%s: %s: %s' % (
-                    hostname, os.path.basename(__file__), e))[:989]
-                traceback.print_exc()
-
-                # Write cgitb output to a variable
-                bodyf = StringIO.StringIO()
-                sys_stderr_orig = sys.stderr
-                sys.stderr = bodyf
-                cgitb.Hook(file=bodyf, context=7, format='html').handle()
-                sys.stderr = sys_stderr_orig
-                body = bodyf.getvalue()
-                bodyf.close()
-
-                if callback is None:
-                    send_email(sender, receivers, subject, body, mail_server)
-                elif both:
-                    send_email(sender, receivers, subject, body, mail_server)
-                    return callback(*args, **kwargs)
-                else:
-                    return callback(*args, **kwargs)
+            except Exception:
+                return _notify(sender, receivers, mail_server, callback, args,
+                               kwargs, both)
         return wrapper
     return decorator
+
+
+def _get_subject(evalue):
+    """ Returns email subject.
+    """
+    hostname = socket.gethostname()
+    # RFC 2822's hard limit is 998 characters per line. So, minus
+    # "Subject: " the actual subject must be no longer than 989
+    # characters. (Copied from Django source).
+    subject = ('%s: %s: %s' % (hostname, os.path.basename(__file__),
+                               evalue))[:989]
+    return subject
+
+
+def _get_body(exc_info=None):
+    """ Returns email body.
+    """
+    # Write cgitb output to a variable
+    bodyf = StringIO.StringIO()
+    sys_stderr_orig = sys.stderr
+    sys.stderr = bodyf
+    cgitb.Hook(file=bodyf, context=7, format='html').handle(exc_info)
+    sys.stderr = sys_stderr_orig
+    body = bodyf.getvalue()
+    bodyf.close()
+    return body
+
+
+def _notify(sender, receivers, mail_server, callback, args, kwargs, both):
+    """ Returns exception email suject and body formatted by cgitb module.
+    """
+    traceback.print_exc()
+
+    evalue = sys.exc_info()[1]
+    subject = _get_subject(evalue)
+    body = _get_body()
+
+    if callback is None:
+        _send_email(sender, receivers, subject, body, mail_server)
+    elif both:
+        _send_email(sender, receivers, subject, body, mail_server)
+        return callback(*args, **kwargs)
+    else:
+        return callback(*args, **kwargs)
+
+
+def _notifiy_hook(etype, evalue, etb):
+    """ Dummy hook that replaces sys.excepthook.
+    Exception info is empty, possibly beacuse we are in sys.excepthook,
+    sys.exc_info() is empty. While the latest exception info is available in
+    etype, evalue and etb.
+    """
+    # Default exception hook to display exception info.
+    sys.__excepthook__(etype, evalue, etb)
+
+    subject = _get_subject(evalue)
+    body = _get_body((etype, evalue, etb))
+
+    t = _notifiy_hook  # this function
+    if t.callback is None:
+        _send_email(t.sender, t.receivers, subject, body, t.mail_server)
+    elif t.both:
+        _send_email(t.sender, t.receivers, subject, body, t.mail_server)
+        return t.callback(*t.args, **t.kwargs)
+    else:
+        return t.callback(*t.args, **t.kwargs)
+
+
+def _hook_wrapper(sender, receivers, mail_server, callback,
+                  args, kwargs, both):
+    """ Returns a dummy exception hook, before it notifies exceptions.
+    """
+    # An (awkward) way to avoid unnecessary class.
+    hook = _notifiy_hook
+    setattr(hook, 'sender', sender)
+    setattr(hook, 'receivers', receivers)
+    setattr(hook, 'mail_server', mail_server)
+    setattr(hook, 'callback', callback)
+    setattr(hook, 'args', args)
+    setattr(hook, 'kwargs', kwargs)
+    setattr(hook, 'both', both)
+    return hook
+
+
+def enable(sender=_log_name, receivers=[_log_name], mail_server='localhost',
+           callback=None, args=(), kwargs={}, both=False):
+    """ Override default exception hook with our new hook.
+    Arguments meaning are the same with mail_exception.
+
+    Note that if both enable and mail_exception are in effect, enable will be
+    shadowed by mail_exception, since exceptions are caught by
+    mail_exception first.
+    """
+    sys.excepthook = _hook_wrapper(sender, receivers, mail_server, callback,
+                                   args, kwargs, both)
+
+
+def disable():
+    """ Disable our exception hook and restore to the system default.
+    """
+    sys.excepthook = sys.__excepthook__
