@@ -54,14 +54,16 @@ class TestExceptionHook(unittest.TestCase):
 
 
 class TestExceptionHookWithCB(unittest.TestCase):
-    """ Test case for exception hook.
+    """ Test case for exception hook with callback function.
+    XXX: Not test is done for callback function.
     """
     def setUp(self):
-        en.enable(callback=exc_handler_ret)
+        en.enable(callback=exc_handler_ret, both=True)
 
     def test_hook(self):
-        self.assertRaises(ZeroDivisionError, div(3, 0))
-        self.assertEqual(div(3, 0), 'DIV_BY_ZERO')
+        self.assertRaises(ZeroDivisionError, div, 3, 0)
+        # XXX: we cannot get return value of callback function here.
+        # self.assertEqual(div(3, 0), 'DIV_BY_ZERO')
 
     def tearDown(self):
         en.disable()
@@ -69,9 +71,11 @@ class TestExceptionHookWithCB(unittest.TestCase):
 
 class TestExceptionHookOnlyCB(unittest.TestCase):
     """ Test case for exception hook.
+    XXX: Not test is done for callback function. This is just the same with
+    TestExceptionHookWithCB.
     """
     def setUp(self):
-        en.enable()
+        en.enable(callback=exc_handler_ret)
 
     def test_hook(self):
         self.assertRaises(ZeroDivisionError, div, 3, 0)
