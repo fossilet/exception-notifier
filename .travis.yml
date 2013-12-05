@@ -3,8 +3,7 @@ python:
   - "2.7"
 install:
     - pip install coveralls
-# Prevent traceback printing for doctest to correctly run.
 script:
-  - coverage run test/test.py 2>/dev/null
+    - coverage run test/test.py
 after_success:
   - coveralls
