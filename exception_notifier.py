@@ -12,6 +12,8 @@ import os
 import os.path
 import StringIO
 
+__version__ = '0.2.1'
+
 _log_name = os.getenv('USERNAME' if sys.platform == 'win32' else 'USER')
 
 

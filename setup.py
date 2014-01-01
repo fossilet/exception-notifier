@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='exception-notifier',
-      version='0.2.1',
+      version=__import__('exception_notifier').__version__,
       description='Notify uncaught exceptions in your Python code',
       author='Yongzhi Pan',
       author_email='panyongzhi@gmail.com',
