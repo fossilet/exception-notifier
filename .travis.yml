@@ -4,6 +4,6 @@ python:
 install:
     - pip install coveralls
 script:
-    - coverage run test/test.py
+    - coverage run -m unittest test.test.travis_suite
 after_success:
   - coveralls

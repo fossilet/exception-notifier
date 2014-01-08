@@ -26,21 +26,20 @@ def div(x, y):
 class TestMailException(unittest.TestCase):
     """ Test mail exception function.
     """
-    @unittest.skip("Travis CI cannot send email.")
     def test_mailexc(self):
         self.assertRaises(Exception, en.mail_exception()(div)(2, 0))
 
-    @unittest.skip("Travis CI cannot send email.")
     def test_mailexc_withcb(self):
         f = en.mail_exception(callback=exc_handler_ret, both=True)(div)
         self.assertRaises(Exception, f(2, 0))
         self.assertEqual(f(2, 0), 'DIV_BY_ZERO')
 
-    @unittest.skip("Travis CI cannot send email.")
     def test_mailexc_onlycb(self):
         g = en.mail_exception(callback=exc_handler_ret)(div)
         self.assertRaises(Exception, g(2, 0))
         self.assertEqual(g(2, 0), 'DIV_BY_ZERO')
+
+mail_suite = unittest.TestLoader().loadTestsFromTestCase(TestMailException)
 
 
 class TestExceptionHook(unittest.TestCase):
@@ -85,6 +84,11 @@ class TestExceptionHookOnlyCB(unittest.TestCase):
 
     def tearDown(self):
         en.disable()
+
+suite1 = unittest.TestLoader().loadTestsFromTestCase(TestExceptionHook)
+suite2 = unittest.TestLoader().loadTestsFromTestCase(TestExceptionHookWithCB)
+suite3 = unittest.TestLoader().loadTestsFromTestCase(TestExceptionHookOnlyCB)
+travis_suite = unittest.TestSuite([suite1, suite2, suite3])
 
 
 if __name__ == '__main__':
