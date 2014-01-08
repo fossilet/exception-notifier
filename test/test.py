@@ -26,14 +26,17 @@ def div(x, y):
 class TestMailException(unittest.TestCase):
     """ Test mail exception function.
     """
+    @unittest.skip("Travis CI cannot send email.")
     def test_mailexc(self):
         self.assertRaises(Exception, en.mail_exception()(div)(2, 0))
 
+    @unittest.skip("Travis CI cannot send email.")
     def test_mailexc_withcb(self):
         f = en.mail_exception(callback=exc_handler_ret, both=True)(div)
         self.assertRaises(Exception, f(2, 0))
         self.assertEqual(f(2, 0), 'DIV_BY_ZERO')
 
+    @unittest.skip("Travis CI cannot send email.")
     def test_mailexc_onlycb(self):
         g = en.mail_exception(callback=exc_handler_ret)(div)
         self.assertRaises(Exception, g(2, 0))
