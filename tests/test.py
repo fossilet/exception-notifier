@@ -1,9 +1,7 @@
 #! /usr/bin/env python
 
-"""Test script for Travis CI.
+"""Tests.
 
-Email sending cannot be tested since it is impossible to send email on
-Travis CI.
 """
 
 import sys
@@ -56,35 +54,37 @@ class TestExceptionHook(unittest.TestCase):
 
 
 class TestExceptionHookWithCB(unittest.TestCase):
-    """ Test case for exception hook with callback function.
-    XXX: Not test is done for callback function.
+    """ Test case for exception hook with callback function and mailing.
     """
     def setUp(self):
         en.enable(callback=exc_handler_ret, both=True)
 
     def test_hook(self):
         self.assertRaises(ZeroDivisionError, div, 3, 0)
-        # XXX: we cannot get return value of callback function here.
-        # self.assertEqual(div(3, 0), 'DIV_BY_ZERO')
+        # XXX: we cannot test return value of callback function here like:
+        #   self.assertEqual(div(3, 0), 'DIV_BY_ZERO')
+        # since Python interpreter exits after exception is handled by
+        # system exception hook.
 
     def tearDown(self):
         en.disable()
 
 
 class TestExceptionHookOnlyCB(unittest.TestCase):
-    """ Test case for exception hook.
-    XXX: Not test is done for callback function. This is just the same with
-    TestExceptionHookWithCB.
+    """ Test case for exception hook with only callback function.
     """
     def setUp(self):
         en.enable(callback=exc_handler_ret)
 
     def test_hook(self):
         self.assertRaises(ZeroDivisionError, div, 3, 0)
+        # XXX: we cannot test return value of callback function. See
+        # TestExceptionHookWithCB.
 
     def tearDown(self):
         en.disable()
 
+# Cannot test email sending on Travis CI.
 suite1 = unittest.TestLoader().loadTestsFromTestCase(TestExceptionHook)
 suite2 = unittest.TestLoader().loadTestsFromTestCase(TestExceptionHookWithCB)
 suite3 = unittest.TestLoader().loadTestsFromTestCase(TestExceptionHookOnlyCB)
