@@ -11,19 +11,21 @@ sys.path.insert(0, '..')
 import exception_notifier as en
 
 
-@en.mail_exception()
-def f():
-    1 / 0
+def div(x, y):
+    return x / y
 
 
-def g():
-    f()
+def cb():
+    return 'E'
+
+g = en.mail_exception()(div)
 
 if __name__ == '__main__':
     # test decorator
-    g()
+    g(1, 0)
 
     # test enable
-    en.enable()
-    2 / 0
+    en.enable(callback=cb, both=True)
+    # XXX: Cannot get return value of callback in exception hook.
+    print(div(1, 0))
     en.disable()

@@ -97,3 +97,21 @@ callback function is executed also.
 
 In the callback function, you probably want to deal with the exception
 information, then [sys.exc_info()](http://docs.python.org/2/library/sys.html#sys.exc_info) is conveniently at your service.
+
+## Bugs
+
+`mail_exception` will make the exception non-fatal, i.e.,
+the program will continue to run after the notifier returns. Future version
+may add an argument for speclify whether the program should terminate after
+the notifier returns.
+
+For `enable`, the program terminates after the notifier returns. This is
+because that we are overriding the system exception hook. Furthermore,
+there is no way to get the return value of `callback` in Python code,
+so the return of it is meaningless, even if you can return some value
+explicitly in it.
+
+The coverage reported by Coveralls is inaccurate, because Travis cannot run
+code sending email. Run tests/test_coverage.sh to get a full coverage.
+However, code of system exception hook is not counted by python-coverage in
+either case.

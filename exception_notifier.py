@@ -114,10 +114,10 @@ def _notify(sender, receivers, mail_server, callback, args, kwargs, both):
 
 
 def _notifiy_hook(etype, evalue, etb):
-    """ Dummy hook that replaces sys.excepthook.
-    Exception info is empty, possibly beacuse we are in sys.excepthook,
-    sys.exc_info() is empty. While the latest exception info is available in
-    etype, evalue and etb.
+    """ Exception hook that notifies exception info.
+    sys.exc_info() is empty here, while the latest exception info is
+    available in etype, evalue and etb.
+    XXX: coverage does not count this function as covered.
     """
     # Default exception hook to display exception info.
     sys.__excepthook__(etype, evalue, etb)
