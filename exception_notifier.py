@@ -38,7 +38,7 @@ def _send_email(sender, receivers, subject, body, mail_server):
     """
     msg = MIMEMultipart('alternative')
     if PY3:
-        msg['subject'] = str(subject, encoding='utf-8')
+        msg['subject'] = str(subject)
     else:
         msg['subject'] = str(subject).decode('utf-8')
     msg['From'] = sender
