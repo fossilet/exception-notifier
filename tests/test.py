@@ -1,14 +1,12 @@
-#! /usr/bin/env python
-
 """Tests.
 
+Should run for both Python 2 and 3.
 """
 
 import sys
 import unittest
 
-# Must run from the project root.
-sys.path.insert(0, '.')
+sys.path.insert(0, '..')
 import exception_notifier as en
 
 
