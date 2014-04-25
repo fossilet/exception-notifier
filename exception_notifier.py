@@ -10,9 +10,17 @@ import cgitb
 import sys
 import os
 import os.path
-import StringIO
 
-__version__ = '0.3.0'
+# Stolen from six: https://bitbucket.org/gutworth/six
+# Useful for very coarse version differentiation.
+PY2 = sys.version_info[0] == 2
+PY3 = sys.version_info[0] == 3
+if PY3:
+    from io import StringIO
+else:
+    from StringIO import StringIO
+
+__version__ = '0.3.1'
 
 _log_name = os.getenv('USERNAME' if sys.platform == 'win32' else 'USER')
 
@@ -29,7 +37,10 @@ def _send_email(sender, receivers, subject, body, mail_server):
     This function should be robust.
     """
     msg = MIMEMultipart('alternative')
-    msg['subject'] = str(subject).decode('utf-8')
+    if PY3:
+        msg['subject'] = str(subject, encoding='utf-8')
+    else:
+        msg['subject'] = str(subject).decode('utf-8')
     msg['From'] = sender
     msg['To'] = ','.join(receivers)
     msg.attach(MIMEText(body, 'html', 'utf-8'))
@@ -37,7 +48,7 @@ def _send_email(sender, receivers, subject, body, mail_server):
     s = smtplib.SMTP(mail_server)
     s.sendmail(msg['From'], receivers, msg.as_string())
     # Print to stderr to facilitate doctest.
-    print >> sys.stderr, "'%s' sent to %s" % (subject, ','.join(receivers))
+    sys.stderr.write("'%s' sent to %s" % (subject, ','.join(receivers)))
     s.quit()
 
 
@@ -85,7 +96,7 @@ def _get_body(exc_info=None):
     """ Returns email body.
     """
     # Write cgitb output to a variable
-    bodyf = StringIO.StringIO()
+    bodyf = StringIO()
     sys_stderr_orig = sys.stderr
     sys.stderr = bodyf
     cgitb.Hook(file=bodyf, context=7, format='html').handle(exc_info)
