@@ -48,7 +48,7 @@ def _send_email(sender, receivers, subject, body, mail_server):
     s = smtplib.SMTP(mail_server)
     s.sendmail(msg['From'], receivers, msg.as_string())
     # Print to stderr to facilitate doctest.
-    sys.stderr.write("'%s' sent to %s" % (subject, ','.join(receivers)))
+    sys.stderr.write("'%s' sent to %s\n" % (subject, ','.join(receivers)))
     s.quit()
 
 
