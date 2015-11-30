@@ -1,6 +1,7 @@
 """Mail uncaught exceptions to developers.
 """
 
+from __future__ import print_function
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import smtplib
@@ -48,7 +49,7 @@ def _send_email(sender, receivers, subject, body, mail_server):
     s = smtplib.SMTP(mail_server)
     s.sendmail(msg['From'], receivers, msg.as_string())
     # Print to stderr to facilitate doctest.
-    sys.stderr.write("'%s' sent to %s\n" % (subject, ','.join(receivers)))
+    print("'%s' sent to %s" % (subject, ','.join(receivers)), file=sys.stderr)
     s.quit()
 
 
