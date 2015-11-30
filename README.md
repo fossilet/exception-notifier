@@ -122,10 +122,10 @@ the notifier returns.
 For `enable`, the program terminates after the notifier returns. This is
 because that we are overriding the system exception hook. Furthermore,
 there is no way to get the return value of `callback` in Python code,
-so the return of it is meaningless, even if you can return some value
+so the return value of it is meaningless, even if you can return some value
 explicitly in it.
 
 The coverage reported by Coveralls is inaccurate, because Travis cannot run
 code sending email. Run tests/test_coverage.sh to get a full coverage.
-However, code of system exception hook is not counted by python-coverage in
-either case.
+However, `python-coverage` does not cover code of system exception hook
+in either case.
