@@ -118,7 +118,7 @@ There is no way to get the return value of `callback` in Python code,
 so the return value of it is meaningless, even if you can return some value
 explicitly in it.
 
-The coverage reported by Coveralls is inaccurate, because Travis cannot run
+The coverage reported by Coveralls is inaccurate because Travis cannot run
 code sending email. Run tests/test_coverage.sh to get a full coverage.
 However, `python-coverage` does not cover code of system exception hook
 in either case.
