@@ -2,7 +2,7 @@
 
 Notify uncaught exceptions in your Python code.
 
-This module works with Python 2.7, 3.2, 3.3 and PyPy.
+This module works with Python 2.7, 3.5 and PyPy.
 
 ## Installation
 
