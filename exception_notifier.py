@@ -21,7 +21,7 @@ if PY3:
 else:
     from StringIO import StringIO
 
-__version__ = '0.3.1.1'
+__version__ = '0.4'
 
 _log_name = os.getenv('USERNAME' if sys.platform == 'win32' else 'USER')
 
