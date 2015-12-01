@@ -10,3 +10,4 @@ script:
     - coverage run -m unittest tests.test.travis_suite
 after_success:
   - coveralls
+sudo: false
