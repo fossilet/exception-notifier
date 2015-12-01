@@ -51,6 +51,11 @@ def _send_email(sender, receivers, subject, body, mail_server):
     # Print to stderr to facilitate doctest.
     print("'%s' sent to %s" % (subject, ','.join(receivers)), file=sys.stderr)
     s.quit()
+    _exit()
+
+
+def _exit():
+    sys.exit(250)
 
 
 def mail_exception(sender=_log_name, receivers=[_log_name],
