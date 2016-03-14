@@ -124,6 +124,5 @@ However, `python-coverage` does not cover code of system exception hook
 in either case.
 
 ## Thanks
-[![PyCharm](http://www.jetbrains.com/pycharm/docs/logo_pycharm.png)](http://www.jetbrains.com/pycharm/)
 
 Powered by PyCharm under an [Open Source License](http://www.jetbrains.com/pycharm/buy/buy.jsp#openSource).
